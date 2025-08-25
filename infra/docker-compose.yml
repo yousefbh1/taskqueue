@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    # volumes:
+    #   - ./rabbitmq-init.sh:/docker-entrypoint-init.d/rabbitmq-init.sh
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  api:
+    build: ../services/api
+    depends_on: [rabbitmq, redis]
+    environment:
+      RABBIT_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_ADDR: redis:6379
+    ports: ["8080:8080"]
+
+  worker:
+    build: ../services/worker
+    depends_on: [rabbitmq]
+    environment:
+      RABBIT_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_ADDR: redis:6379

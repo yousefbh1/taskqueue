@@ -1,0 +1,18 @@
+# Go build artifacts
+/bin
+/out
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# Logs
+*.log
+.vscode/
+
+# Dependencies
+vendor/
+
+# Environment & secrets
+.env

@@ -1,0 +1,23 @@
+services:
+  api:
+    image: ghcr.io/yousefbh1/taskqueue-api:latest
+    environment:
+      RABBIT_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_ADDR: redis:6379
+    ports: ["8080:8080"]
+    depends_on: [rabbitmq, redis]
+
+  worker:
+    image: ghcr.io/yousefbh1/taskqueue-worker:latest
+    environment:
+      RABBIT_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_ADDR: redis:6379
+    depends_on: [rabbitmq, redis]
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports: ["5672:5672","15672:15672"]
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]

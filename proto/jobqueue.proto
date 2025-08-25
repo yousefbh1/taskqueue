@@ -1,0 +1,25 @@
+syntax = "proto3";
+package jobqueue.v1;
+
+option go_package = "example.com/taskqueue/api/gen;gen";
+
+service JobApi {
+  rpc SubmitJob(SubmitJobReq) returns (SubmitJobResp);
+  rpc GetJob(GetJobReq) returns (GetJobResp);
+}
+
+message SubmitJobReq {
+  string type = 1;
+  string payload = 2;
+  int32  priority = 3;        // 0..10
+  string idempotency_key = 4; // for Day 2
+}
+message SubmitJobResp { string job_id = 1; }
+
+message GetJobReq { string job_id = 1; }
+message GetJobResp {
+  string status = 1;     // queued|running|succeeded|failed
+  string result_json = 2;
+  string error = 3;
+  int32  attempts = 4;
+}
